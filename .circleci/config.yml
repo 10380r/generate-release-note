@@ -2,7 +2,7 @@ version: 2.1
 
 jobs:
   release:
-    working_directory: {YOUR_WORKING_DIRECTORY}
+    working_directory: /go/src/github.com/10380r/generate-release-note
     docker:
       - image: circleci/golang:1.16.0
     steps:
@@ -16,8 +16,8 @@ jobs:
           name: Create release note
           command: |
             github-release release \
-              --user {YOUR_GITHUB_USER} \
-              --repo {YOUR_REPOSITORY} \
+              --user 10380r \
+              --repo generate-release-note \
               --tag "${CIRCLE_TAG}" \
               --name "${CIRCLE_TAG}" \
               --description "$(ghch --format=markdown --latest)"

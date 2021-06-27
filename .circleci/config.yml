@@ -1,0 +1,33 @@
+version: 2.1
+
+jobs:
+  release:
+    working_directory: {YOUR_WORKING_DIRECTORY}
+    docker:
+      - image: circleci/golang:1.16.0
+    steps:
+      - checkout
+      - run:
+          name: Install ghch and github-release
+          command: |
+            go install github.com/Songmu/ghch/cmd/ghch@v0.10.2
+            go install github.com/github-release/github-release@v0.10.0
+      - run:
+          name: Create release note
+          command: |
+            github-release release \
+              --user {YOUR_GITHUB_USER} \
+              --repo {YOUR_REPOSITORY} \
+              --tag "${CIRCLE_TAG}" \
+              --name "${CIRCLE_TAG}" \
+              --description "$(ghch --format=markdown --latest)"
+
+workflows:
+  workflow:
+    jobs:
+      - release:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/
